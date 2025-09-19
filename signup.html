@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود و ثبت نام - Tesla Exchange</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .form-container {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .tab-active {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .tab-inactive {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .input-focus:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .success-message {
+            background: #10b981;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        
+        .error-message {
+            background: #ef4444;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-red-600 rounded-xl mb-4">
+                <span class="text-white font-bold text-2xl">₸</span>
+            </div>
+            <h1 class="text-3xl font-bold text-white mb-2">Tesla Exchange</h1>
+            <p class="text-blue-100">اولین پلتفرم درآمدزایی آسان جهان</p>
+        </div>
+
+        <!-- Form Container -->
+        <div class="form-container rounded-2xl shadow-2xl p-8">
+            <!-- Tabs -->
+            <div class="flex bg-gray-100 rounded-lg p-1 mb-6">
+                <button id="login-tab" class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all tab-active">
+                    ورود
+                </button>
+                <button id="register-tab" class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all tab-inactive">
+                    ثبت نام
+                </button>
+            </div>
+
+            <!-- Messages -->
+            <div id="success-message" class="success-message"></div>
+            <div id="error-message" class="error-message"></div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">شماره موبایل</label>
+                    <input type="tel" id="login-phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="09123456789" required>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">رمز عبور</label>
+                    <div class="relative">
+                        <input type="password" id="login-password" class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="رمز عبور خود را وارد کنید" required>
+                        <button type="button" id="toggle-login-password" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <span class="mr-2 text-sm text-gray-600">مرا به خاطر بسپار</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                    ورود به حساب کاربری
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">کد دعوت *</label>
+                    <input type="text" id="invitation-code" class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="کد دعوت خود را وارد کنید" required>
+                    <p class="text-xs text-gray-500 mt-1">برای ثبت نام نیاز به کد دعوت معتبر دارید</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">نام</label>
+                        <input type="text" id="first-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="نام" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">نام خانوادگی</label>
+                        <input type="text" id="last-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="نام خانوادگی" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">شماره موبایل</label>
+                    <input type="tel" id="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="09123456789" required>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">رمز عبور</label>
+                    <div class="relative">
+                        <input type="password" id="register-password" class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="حداقل 8 کاراکتر" required>
+                        <button type="button" id="toggle-register-password" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="mt-2">
+                        <div class="flex items-center text-xs text-gray-500">
+                            <span id="length-check" class="flex items-center ml-4">
+                                <span class="w-2 h-2 rounded-full bg-gray-300 ml-1"></span>
+                                حداقل 8 کاراکتر
+                            </span>
+                            <span id="number-check" class="flex items-center ml-4">
+                                <span class="w-2 h-2 rounded-full bg-gray-300 ml-1"></span>
+                                شامل عدد
+                            </span>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">تکرار رمز عبور</label>
+                    <input type="password" id="confirm-password" class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="رمز عبور را مجدداً وارد کنید" required>
+                </div>
+
+                <div class="flex items-start">
+                    <input type="checkbox" id="terms" class="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500" required>
+                    <label for="terms" class="mr-2 text-sm text-gray-600">
+                        با <a href="#" class="text-blue-600 hover:text-blue-800">قوانین و مقررات</a> و 
+                        <a href="#" class="text-blue-600 hover:text-blue-800">حریم خصوصی</a> موافقم
+                    </label>
+                </div>
+
+                <button type="submit" class="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors font-medium">
+                    ثبت نام
+                </button>
+            </form>
+
+            <!-- Back to Home -->
+            <div class="mt-6 text-center">
+                <a href="#" id="back-home" class="text-sm text-gray-600 hover:text-gray-800 flex items-center justify-center">
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    بازگشت به صفحه اصلی
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Valid invitation codes (in real app, this would be checked server-side)
+        const validInvitationCodes = [
+            'TESLA2024',
+            'CRYPTO123',
+            'EXCHANGE456',
+            'INVITE789',
+            'WELCOME2024'
+        ];
+
+        // Tab switching
+        const loginTab = document.getElementById('login-tab');
+        const registerTab = document.getElementById('register-tab');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+
+        loginTab.addEventListener('click', () => {
+            loginTab.className = 'flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all tab-active';
+            registerTab.className = 'flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all tab-inactive';
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+            clearMessages();
+        });
+
+        registerTab.addEventListener('click', () => {
+            registerTab.className = 'flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all tab-active';
+            loginTab.className = 'flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all tab-inactive';
+            registerForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+            clearMessages();
+        });
+
+        // Password visibility toggle
+        document.getElementById('toggle-login-password').addEventListener('click', function() {
+            const passwordInput = document.getElementById('login-password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+        });
+
+        document.getElementById('toggle-register-password').addEventListener('click', function() {
+            const passwordInput = document.getElementById('register-password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+        });
+
+        // Password strength checker
+        const registerPassword = document.getElementById('register-password');
+        const lengthCheck = document.getElementById('length-check');
+        const numberCheck = document.getElementById('number-check');
+
+        registerPassword.addEventListener('input', function() {
+            const password = this.value;
+            
+            // Length check
+            if (password.length >= 8) {
+                lengthCheck.querySelector('.w-2').className = 'w-2 h-2 rounded-full bg-green-500 ml-1';
+            } else {
+                lengthCheck.querySelector('.w-2').className = 'w-2 h-2 rounded-full bg-gray-300 ml-1';
+            }
+            
+            // Number check
+            if (/\d/.test(password)) {
+                numberCheck.querySelector('.w-2').className = 'w-2 h-2 rounded-full bg-green-500 ml-1';
+            } else {
+                numberCheck.querySelector('.w-2').className = 'w-2 h-2 rounded-full bg-gray-300 ml-1';
+            }
+        });
+
+        // Form submissions
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const phone = document.getElementById('login-phone').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Simulate login process
+            if (phone && password) {
+                showSuccess('ورود موفقیت‌آمیز بود! در حال انتقال به داشبورد...');
+                setTimeout(() => {
+                    alert('شما با موفقیت وارد شدید! (در نسخه واقعی به داشبورد منتقل می‌شوید)');
+                }, 2000);
+            } else {
+                showError('لطفاً تمام فیلدها را پر کنید');
+            }
+        });
+
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const invitationCode = document.getElementById('invitation-code').value;
+            const firstName = document.getElementById('first-name').value;
+            const lastName = document.getElementById('last-name').value;
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const terms = document.getElementById('terms').checked;
+            
+            // Validation
+            if (!validInvitationCodes.includes(invitationCode.toUpperCase())) {
+                showError('کد دعوت نامعتبر است. لطفاً کد صحیح را وارد کنید');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showError('رمز عبور و تکرار آن مطابقت ندارند');
+                return;
+            }
+            
+            if (password.length < 8) {
+                showError('رمز عبور باید حداقل 8 کاراکتر باشد');
+                return;
+            }
+            
+            if (!terms) {
+                showError('لطفاً قوانین و مقررات را بپذیرید');
+                return;
+            }
+            
+            // Simulate registration process
+            showSuccess('ثبت نام با موفقیت انجام شد! ایمیل تأیید برای شما ارسال شد');
+            setTimeout(() => {
+                alert('حساب کاربری شما ایجاد شد! (در نسخه واقعی ایمیل تأیید ارسال می‌شود)');
+                // Switch to login tab
+                loginTab.click();
+                registerForm.reset();
+            }, 2000);
+        });
+
+        // Invitation code validation on blur
+        document.getElementById('invitation-code').addEventListener('blur', function() {
+            const code = this.value.toUpperCase();
+            if (code && !validInvitationCodes.includes(code)) {
+                this.style.borderColor = '#ef4444';
+                showError('کد دعوت نامعتبر است');
+            } else if (code && validInvitationCodes.includes(code)) {
+                this.style.borderColor = '#10b981';
+                clearMessages();
+                showSuccess('کد دعوت معتبر است ✓');
+            }
+        });
+
+        // Back to home functionality
+        document.getElementById('back-home').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('بازگشت به صفحه اصلی (در نسخه واقعی به صفحه اصلی منتقل می‌شوید)');
+        });
+
+        // Utility functions
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            const errorDiv = document.getElementById('error-message');
+            
+            errorDiv.style.display = 'none';
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showError(message) {
+            const successDiv = document.getElementById('success-message');
+            const errorDiv = document.getElementById('error-message');
+            
+            successDiv.style.display = 'none';
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function clearMessages() {
+            document.getElementById('success-message').style.display = 'none';
+            document.getElementById('error-message').style.display = 'none';
+        }
+
+        // Phone number formatting
+        document.getElementById('phone').addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.startsWith('98')) {
+                value = '0' + value.substring(2);
+            }
+            if (value.length > 11) {
+                value = value.substring(0, 11);
+            }
+            this.value = value;
+        });
+
+        document.getElementById('login-phone').addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.startsWith('98')) {
+                value = '0' + value.substring(2);
+            }
+            if (value.length > 11) {
+                value = value.substring(0, 11);
+            }
+            this.value = value;
+        });
+
+
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9814779ec1732dae',t:'MTc1ODIzNjUwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

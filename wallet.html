@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کیف پول - Tesla Exchange</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        
+        .wallet-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border: 1px solid #334155;
+        }
+        
+        .balance-card {
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+        }
+        
+        .crypto-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            transition: all 0.3s ease;
+        }
+        
+        .crypto-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+        
+        .price-up {
+            color: #10b981;
+        }
+        
+        .price-down {
+            color: #ef4444;
+        }
+        
+        .nav-active {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .nav-inactive {
+            background: transparent;
+            color: #94a3b8;
+        }
+        
+        .nav-inactive:hover {
+            background: #334155;
+            color: #e2e8f0;
+        }
+        
+        .transaction-item {
+            background: #1e293b;
+            border: 1px solid #334155;
+        }
+        
+        .deposit-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .withdraw-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .modal {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal-content {
+            background: #1e293b;
+            border: 1px solid #334155;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-slate-800 border-b border-slate-700 px-6 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center ml-3">
+                        <span class="text-white font-bold text-lg">₸</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white">Tesla Exchange</h1>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="flex space-x-2 space-x-reverse">
+                <button id="trading-nav" class="px-4 py-2 rounded-lg nav-inactive transition-all">معاملات</button>
+                <button id="wallet-nav" class="px-4 py-2 rounded-lg nav-active transition-all">کیف پول</button>
+                <button id="staking-nav" class="px-4 py-2 rounded-lg nav-inactive transition-all">Staking</button>
+            </nav>
+            
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <div class="text-left">
+                    <p class="text-sm text-slate-400">موجودی کل</p>
+                    <p class="text-lg font-bold text-green-400" id="total-balance">$12,450.80</p>
+                </div>
+                <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    خروج
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="p-6">
+        <!-- Wallet Overview -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-6">کیف پول من</h2>
+            
+            <!-- Balance Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="balance-card rounded-lg p-6 text-white">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">موجودی کل</h3>
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                    </div>
+                    <p class="text-3xl font-bold">$12,450.80</p>
+                    <p class="text-purple-200 text-sm mt-2">+5.2% از دیروز</p>
+                </div>
+                
+                <div class="wallet-card rounded-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">موجودی آزاد</h3>
+                        <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-2xl font-bold text-green-400">$8,320.45</p>
+                    <p class="text-slate-400 text-sm mt-2">قابل معامله</p>
+                </div>
+                
+                <div class="wallet-card rounded-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">موجودی قفل شده</h3>
+                        <svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-2xl font-bold text-yellow-400">$4,130.35</p>
+                    <p class="text-slate-400 text-sm mt-2">در سفارشات و استیکینگ</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-center space-x-6 space-x-reverse mb-8">
+            <button id="deposit-btn" class="deposit-btn text-white px-12 py-4 rounded-xl font-bold text-lg hover:opacity-90 transition-opacity flex items-center min-w-[200px] justify-center">
+                <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                واریز
+            </button>
+            <button id="withdraw-btn" class="withdraw-btn text-white px-12 py-4 rounded-xl font-bold text-lg hover:opacity-90 transition-opacity flex items-center min-w-[200px] justify-center">
+                <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                </svg>
+                برداشت
+            </button>
+        </div>
+
+
+
+        <!-- Recent Transactions -->
+        <div>
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold">تراکنش‌های اخیر</h3>
+                <button class="text-blue-400 hover:text-blue-300 text-sm">مشاهده همه</button>
+            </div>
+            <div class="space-y-3" id="recent-transactions">
+                <!-- Transactions will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Deposit Modal -->
+    <div id="deposit-modal" class="fixed inset-0 modal hidden items-center justify-center z-50">
+        <div class="modal-content rounded-lg p-6 w-full max-w-md mx-4">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold">واریز ارز دیجیتال</h3>
+                <button id="close-deposit" class="text-slate-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">ارز انتخابی</label>
+                    <div class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white">
+                        Tether (USDT)
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">آدرس کیف پول</label>
+                    <div class="bg-slate-700 border border-slate-600 rounded-lg p-3">
+                        <p class="text-sm font-mono break-all" id="deposit-address">1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa</p>
+                        <button class="text-blue-400 hover:text-blue-300 text-sm mt-2" onclick="copyAddress()">کپی آدرس</button>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">شناسه واریز (TXN|HASH)</label>
+                    <input type="text" id="deposit-txn" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white" placeholder="شناسه تراکنش را وارد کنید">
+                </div>
+                
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">مبلغ واریز (USDT)</label>
+                    <input type="number" id="deposit-amount" step="0.01" min="30" max="200" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white" placeholder="30.00">
+                </div>
+                
+                <div class="bg-yellow-900/20 border border-yellow-600 rounded-lg p-3">
+                    <p class="text-yellow-400 text-sm">⚠️ فقط ارز انتخاب شده را به این آدرس ارسال کنید. ارسال ارز دیگر منجر به از دست رفتن آن می‌شود.</p>
+                    <p class="text-yellow-400 text-sm mt-2">💰 مبلغ واریزی را به صورت صحیح با 2 عدد اعشاری مانند 30.00 یا 30.11 وارد کنید. حداقل 30 دلار و حداکثر 200 دلار.</p>
+                </div>
+                
+                <button id="submit-deposit" class="w-full deposit-btn text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">
+                    ثبت شناسه واریز
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div id="withdraw-modal" class="fixed inset-0 modal hidden items-center justify-center z-50">
+        <div class="modal-content rounded-lg p-6 w-full max-w-md mx-4">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold">برداشت ارز دیجیتال</h3>
+                <button id="close-withdraw" class="text-slate-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="withdraw-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">ارز انتخابی</label>
+                    <div class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white">
+                        Tether (USDT) - موجودی: 1,250.80
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">آدرس مقصد</label>
+                    <input type="text" id="withdraw-address" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white" placeholder="آدرس کیف پول مقصد را وارد کنید">
+                </div>
+                
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">مقدار</label>
+                    <input type="number" id="withdraw-amount" step="0.00001" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white" placeholder="0.00000">
+                </div>
+                
+                <div class="text-sm text-slate-400">
+                    <p>کارمزد شبکه: <span class="text-white">1.00 USDT</span></p>
+                    <p>مقدار دریافتی: <span class="text-white" id="receive-amount">0.00 USDT</span></p>
+                </div>
+                
+                <button type="submit" class="w-full withdraw-btn text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">
+                    تأیید برداشت
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+
+        const recentTransactions = [
+            { type: 'deposit', crypto: 'BTC', amount: 0.05, value: 2162.54, time: '2 ساعت پیش', status: 'completed' },
+            { type: 'withdraw', crypto: 'ETH', amount: 1.5, value: 4020.75, time: '5 ساعت پیش', status: 'completed' },
+            { type: 'trade', crypto: 'USDT', amount: 500, value: 500, time: '1 روز پیش', status: 'completed' },
+            { type: 'deposit', crypto: 'BNB', amount: 5, value: 1576, time: '2 روز پیش', status: 'pending' },
+            { type: 'withdraw', crypto: 'ADA', amount: 1000, value: 520, time: '3 روز پیش', status: 'completed' }
+        ];
+
+
+
+        // Populate recent transactions
+        function populateTransactions() {
+            const container = document.getElementById('recent-transactions');
+            container.innerHTML = '';
+
+            recentTransactions.forEach(tx => {
+                const typeIcon = {
+                    'deposit': '↓',
+                    'withdraw': '↑',
+                    'trade': '⇄'
+                };
+
+                const typeColor = {
+                    'deposit': 'text-green-400',
+                    'withdraw': 'text-red-400',
+                    'trade': 'text-blue-400'
+                };
+
+                const statusColor = tx.status === 'completed' ? 'text-green-400' : 'text-yellow-400';
+                const statusText = tx.status === 'completed' ? 'تکمیل شده' : 'در انتظار';
+
+                const item = document.createElement('div');
+                item.className = 'transaction-item rounded-lg p-4 flex items-center justify-between';
+                item.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center ${typeColor[tx.type]} text-xl mr-4">
+                            ${typeIcon[tx.type]}
+                        </div>
+                        <div>
+                            <h4 class="font-semibold">${tx.type === 'deposit' ? 'واریز' : tx.type === 'withdraw' ? 'برداشت' : 'معامله'} ${tx.crypto}</h4>
+                            <p class="text-sm text-slate-400">${tx.time}</p>
+                        </div>
+                    </div>
+                    <div class="text-left">
+                        <p class="font-bold">${tx.amount.toLocaleString('en-US', {minimumFractionDigits: tx.crypto === 'USDT' ? 2 : 6, maximumFractionDigits: tx.crypto === 'USDT' ? 2 : 6})} ${tx.crypto}</p>
+                        <p class="text-sm ${statusColor}">${statusText}</p>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Modal functionality
+        const depositModal = document.getElementById('deposit-modal');
+        const withdrawModal = document.getElementById('withdraw-modal');
+        const depositBtn = document.getElementById('deposit-btn');
+        const withdrawBtn = document.getElementById('withdraw-btn');
+        const closeDeposit = document.getElementById('close-deposit');
+        const closeWithdraw = document.getElementById('close-withdraw');
+
+        depositBtn.addEventListener('click', () => {
+            depositModal.classList.remove('hidden');
+            depositModal.classList.add('flex');
+        });
+
+        withdrawBtn.addEventListener('click', () => {
+            withdrawModal.classList.remove('hidden');
+            withdrawModal.classList.add('flex');
+        });
+
+        closeDeposit.addEventListener('click', () => {
+            depositModal.classList.add('hidden');
+            depositModal.classList.remove('flex');
+        });
+
+        closeWithdraw.addEventListener('click', () => {
+            withdrawModal.classList.add('hidden');
+            withdrawModal.classList.remove('flex');
+        });
+
+        // Close modals on backdrop click
+        depositModal.addEventListener('click', (e) => {
+            if (e.target === depositModal) {
+                depositModal.classList.add('hidden');
+                depositModal.classList.remove('flex');
+            }
+        });
+
+        withdrawModal.addEventListener('click', (e) => {
+            if (e.target === withdrawModal) {
+                withdrawModal.classList.add('hidden');
+                withdrawModal.classList.remove('flex');
+            }
+        });
+
+        // Copy address function
+        function copyAddress() {
+            const address = document.getElementById('deposit-address').textContent;
+            navigator.clipboard.writeText(address).then(() => {
+                alert('آدرس کپی شد!');
+            });
+        }
+
+        // Deposit form submission
+        document.getElementById('submit-deposit').addEventListener('click', () => {
+            const txnHash = document.getElementById('deposit-txn').value;
+            const amount = parseFloat(document.getElementById('deposit-amount').value);
+
+            if (!txnHash) {
+                alert('لطفاً شناسه تراکنش را وارد کنید');
+                return;
+            }
+
+            if (!amount || amount < 30 || amount > 200) {
+                alert('لطفاً مبلغ معتبر بین 30 تا 200 دلار وارد کنید');
+                return;
+            }
+
+            // Check if amount has exactly 2 decimal places
+            const amountStr = amount.toFixed(2);
+            if (parseFloat(amountStr) !== amount) {
+                alert('لطفاً مبلغ را با دقیقاً 2 رقم اعشار وارد کنید (مثال: 30.00 یا 30.11)');
+                return;
+            }
+
+            alert(`شناسه واریز ثبت شد:\nمبلغ: ${amountStr} USDT\nشناسه: ${txnHash}\n\nواریز شما پس از تأیید به حساب اضافه می‌شود.`);
+            
+            // Reset form
+            document.getElementById('deposit-txn').value = '';
+            document.getElementById('deposit-amount').value = '';
+            
+            // Close modal
+            depositModal.classList.add('hidden');
+            depositModal.classList.remove('flex');
+        });
+
+        // Withdraw form
+        document.getElementById('withdraw-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const address = document.getElementById('withdraw-address').value;
+            const amount = document.getElementById('withdraw-amount').value;
+
+            if (!address || !amount) {
+                alert('لطفاً تمام فیلدها را پر کنید');
+                return;
+            }
+
+            alert(`درخواست برداشت ${amount} USDT به آدرس ${address.substring(0, 10)}... ثبت شد`);
+            withdrawModal.classList.add('hidden');
+            withdrawModal.classList.remove('flex');
+        });
+
+        // Update receive amount in withdraw modal
+        document.getElementById('withdraw-amount').addEventListener('input', (e) => {
+            const amount = parseFloat(e.target.value) || 0;
+            const fee = 1.00; // USDT fee
+            const receiveAmount = Math.max(0, amount - fee);
+            document.getElementById('receive-amount').textContent = `${receiveAmount.toFixed(2)} USDT`;
+        });
+
+        // Navigation
+        document.getElementById('trading-nav').addEventListener('click', () => {
+            alert('انتقال به صفحه معاملات (در نسخه واقعی)');
+        });
+
+        document.getElementById('staking-nav').addEventListener('click', () => {
+            alert('انتقال به صفحه Staking (در نسخه واقعی)');
+        });
+
+        // Logout
+        document.querySelector('.bg-red-600').addEventListener('click', () => {
+            if (confirm('آیا مطمئن هستید که می‌خواهید خارج شوید؟')) {
+                alert('خروج از حساب کاربری (در نسخه واقعی به صفحه ورود منتقل می‌شوید)');
+            }
+        });
+
+        // Initialize page
+        populateTransactions();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9814b8b8d7240fa5',t:'MTc1ODIzOTE3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
